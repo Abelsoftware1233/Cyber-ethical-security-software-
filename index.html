@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZeroThreat – Penetration Testing Tools</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-zero">ZER<span class="logo-o">O</span></span>
+      <span class="logo-threat">THREAT</span>
+    </div>
+    <div class="header-title">
+      <h1>List of Top Free<br/>Penetration Testing Tools</h1>
+    </div>
+  </header>
+
+  <!-- TOOLS GRID -->
+  <main class="tools-grid" id="toolsGrid">
+
+    <!-- Row 1 -->
+    <div class="tool-card" data-tool="zerothreat">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon zerothreat-icon">
+          <div class="zt-outer-ring"></div>
+          <div class="zt-inner-dot"></div>
+        </div>
+      </div>
+      <span class="tool-name">ZeroThreat</span>
+    </div>
+
+    <div class="tool-card" data-tool="kali">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon kali-icon">
+          <img src="https://www.kali.org/images/kali-dragon-icon.svg" alt="Kali Linux" onerror="this.style.display='none'" />
+          <span class="fallback-icon">🐉</span>
+        </div>
+      </div>
+      <span class="tool-name">Kali Linux</span>
+    </div>
+
+    <div class="tool-card" data-tool="metasploit">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon metasploit-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 4L34 12V28L20 36L6 28V12L20 4Z" fill="#1a1a2e" stroke="#4fc3f7" stroke-width="1.5"/>
+            <path d="M14 14H18V26H14V14Z" fill="#4fc3f7"/>
+            <path d="M22 14H26V26H22V14Z" fill="#4fc3f7"/>
+            <path d="M14 18H26V22H14V18Z" fill="#4fc3f7"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Metasploit</span>
+    </div>
+
+    <div class="tool-card" data-tool="nmap">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon nmap-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="20" cy="20" rx="16" ry="9" stroke="#a0d8ef" stroke-width="1.5" fill="none"/>
+            <ellipse cx="20" cy="20" rx="8" ry="4" stroke="#a0d8ef" stroke-width="1" fill="none"/>
+            <circle cx="20" cy="20" r="2" fill="#a0d8ef"/>
+            <line x1="4" y1="20" x2="36" y2="20" stroke="#a0d8ef" stroke-width="0.8"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Nmap</span>
+    </div>
+
+    <div class="tool-card" data-tool="w3af">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon w3af-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="14" fill="#1a1a2e" stroke="#c084fc" stroke-width="1.5"/>
+            <circle cx="20" cy="14" r="5" fill="#c084fc" opacity="0.8"/>
+            <path d="M12 28 Q20 18 28 28" stroke="#c084fc" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">w3af</span>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="tool-card" data-tool="wireshark">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon wireshark-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 8 L28 20 L20 36 L12 20 Z" fill="#00bcd4" opacity="0.9"/>
+            <path d="M20 8 L28 20 L20 28 L12 20 Z" fill="#0288d1"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Wireshark</span>
+    </div>
+
+    <div class="tool-card" data-tool="nikto">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon nikto-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="14" fill="#1a1a2e" stroke="#f48fb1" stroke-width="1.5"/>
+            <path d="M14 14 L26 26 M26 14 L14 26" stroke="#f48fb1" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="20" cy="20" r="3" fill="#f48fb1"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Nikto</span>
+    </div>
+
+    <div class="tool-card" data-tool="burpsuite">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon burp-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="28" height="28" rx="6" fill="#e8590c"/>
+            <path d="M18 13 L26 20 L18 27" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Burp Suite</span>
+    </div>
+
+    <div class="tool-card" data-tool="nessus">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon nessus-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="14" fill="#1a1a2e" stroke="#00e5ff" stroke-width="1.5"/>
+            <path d="M12 20 Q16 12 20 20 Q24 28 28 20" stroke="#00e5ff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">Nessus</span>
+    </div>
+
+    <div class="tool-card" data-tool="johntheripper">
+      <div class="tool-icon-wrapper">
+        <div class="tool-icon jtr-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="28" height="28" rx="3" fill="#8b1a1a"/>
+            <text x="20" y="24" text-anchor="middle" font-size="10" fill="white" font-family="serif" font-weight="bold">John</text>
+          </svg>
+        </div>
+      </div>
+      <span class="tool-name">John the Ripper</span>
+    </div>
+
+  </main>
+
+  <!-- TERMINAL MODAL -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="terminal-modal" id="terminalModal">
+      <div class="terminal-header">
+        <div class="terminal-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <span class="terminal-title" id="terminalTitle">Terminal – ZeroThreat</span>
+        <button class="close-btn" id="closeBtn">&times;</button>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <div class="terminal-output" id="terminalOutput"></div>
+        <div class="terminal-input-line">
+          <span class="prompt" id="terminalPrompt">root@zerothreat:~#</span>
+          <input type="text" class="terminal-input" id="terminalInput" placeholder="Type command..." autocomplete="off" spellcheck="false"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>zerothreat.ai</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
