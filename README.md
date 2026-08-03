@@ -49,7 +49,7 @@ sudo apt install nmap nikto john tshark w3af hydra sqlmap dirb gobuster hashcat
 python app.py
 ```
 
-De backend draait nu op: `http://127.0.0.1:5000`
+De backend draait nu op: `http://127.0.0.1:5006`
 
 ### 4. Frontend openen
 
