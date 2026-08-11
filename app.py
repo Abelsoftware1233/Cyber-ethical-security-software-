@@ -178,6 +178,6 @@ def lijst_tools():
 if __name__ == "__main__":
     print("=" * 45)
     print("  ZeroThreat Backend – Actief")
-    print("  URL: http://127.0.0.1:5006")
+    print("  URL: http://127.0.0.1:5025")
     print("=" * 45)
-    app.run(debug=True, host="127.0.0.1", port=5006)
+    app.run(debug=True, host="127.0.0.1", port=5025)
