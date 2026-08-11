@@ -126,7 +126,7 @@ Voorbeeld response:
 Voer een tool uit met argumenten.
 
 ```bash
-curl -X POST http://127.0.0.1:5000/api/run \
+curl -X POST http://127.0.0.1:5025/api/run \
   -H "Content-Type: application/json" \
   -d '{"tool": "nmap", "args": "-sV 192.168.1.1"}'
 ```
@@ -145,7 +145,7 @@ Voorbeeld response:
 Geef een lijst van alle geconfigureerde tools.
 
 ```bash
-curl http://127.0.0.1:5000/api/tools
+curl http://127.0.0.1:5025/api/tools
 ```
 
 ---
@@ -180,7 +180,7 @@ Oplossing: Installeer de tool met `sudo apt install nmap`
 **CORS fout in browser**
 Oplossing: Open de frontend via een lokale server in plaats van direct het bestand:
 ```bash
-python -m http.server 8080
+python -m http.server 5025
 ```
 
 ---
