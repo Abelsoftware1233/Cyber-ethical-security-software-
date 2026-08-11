@@ -60,8 +60,8 @@ Open `index.html` in je browser. Dat kan via:
 xdg-open index.html
 
 # Optie 2 – Via een lokale server (aanbevolen)
-python -m http.server 8080
-# Ga dan naar: http://localhost:8080
+python -m http.server 5025
+# Ga dan naar: http://localhost:5025
 ```
 
 ---
