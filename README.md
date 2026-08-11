@@ -107,7 +107,7 @@ De Flask backend heeft de volgende endpoints:
 Controleer welke tools geïnstalleerd zijn.
 
 ```bash
-curl http://127.0.0.1:5000/api/status
+curl http://127.0.0.1:5025/api/status
 ```
 
 Voorbeeld response:
