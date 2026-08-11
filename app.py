@@ -1,20 +1,23 @@
-"""
-ZeroThreat – Flask Backend
-Voer uit met: python app.py
-"""
+# ZeroThreat - Flask Backend
+# Voer uit met: python app.py
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import subprocess
 import shlex
 import os
 import re
 
-app = Flask(__name__)
+# 1. Flask initialisatie met statische bestanden vanuit de hoofdmap
+app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app)  # Staat verbindingen toe vanuit je frontend
 
+# 2. Hoofdroute die index.html serveert
+@app.route('/')
+def serve_index():
+    return send_from_directory('.', 'index.html')
+
 # ===== TOEGESTANE TOOLS & COMMANDO'S =====
-# Voeg hier jouw eigen tools/paden toe
 ALLOWED_TOOLS = {
     "nmap": {
         "bin": "nmap",
@@ -29,7 +32,7 @@ ALLOWED_TOOLS = {
         "allowed_flags": ["--show", "--list=formats", "--wordlist", "--format"],
     },
     "wireshark": {
-        "bin": "tshark",   # Wireshark CLI versie
+        "bin": "tshark",  # Wireshark CLI versie
         "allowed_flags": ["-i", "-c", "-Y", "-r", "-w"],
     },
     "w3af": {
@@ -42,142 +45,72 @@ ALLOWED_TOOLS = {
     },
     "sqlmap": {
         "bin": "sqlmap",
-        "allowed_flags": ["-u", "--dbs", "--tables", "--dump", "--batch", "--level"],
+        "allowed_flags": ["-u", "--batch", "--dbs", "--tables", "--dump", "--level", "--risk"],
     },
-    "dirb": {
-        "bin": "dirb",
-        "allowed_flags": ["-o", "-r", "-z"],
-    },
-    "gobuster": {
-        "bin": "gobuster",
-        "allowed_flags": ["dir", "-u", "-w", "-t", "-o", "-x"],
-    },
-    "hashcat": {
-        "bin": "hashcat",
-        "allowed_flags": ["-m", "-a", "-o", "--show", "--force"],
-    },
+    "metasploit": {
+        "bin": "msfconsole",
+        "allowed_flags": ["-x", "-q"],
+    }
 }
 
-# ===== HULPFUNCTIES =====
+# ===== API ENDPOINTS =====
 
-def tool_beschikbaar(tool_naam):
-    """Controleer of een tool geïnstalleerd is op het systeem."""
-    return subprocess.run(
-        ["which", tool_naam],
-        capture_output=True
-    ).returncode == 0
+@app.route('/api/tools', methods=['GET'])
+def get_tools():
+    """Geef lijst van toegestane tools terug."""
+    return jsonify(ALLOWED_TOOLS)
 
-
-def valideer_commando(tool_key, args_string):
-    """
-    Basisvalidatie: controleer of de tool bestaat in de whitelist.
-    Voeg hier extra validatie toe indien gewenst.
-    """
-    if tool_key not in ALLOWED_TOOLS:
-        return False, f"Tool '{tool_key}' is niet toegestaan."
-    return True, None
-
-
-def voer_uit(commando_lijst, timeout=60):
-    """
-    Voer een systeemcommando uit en geef de uitvoer terug.
-    timeout: maximale uitvoeringstijd in seconden
-    """
-    try:
-        result = subprocess.run(
-            commando_lijst,
-            capture_output=True,
-            text=True,
-            timeout=timeout
-        )
-        uitvoer = result.stdout or result.stderr or "(geen uitvoer)"
-        return True, uitvoer
-    except subprocess.TimeoutExpired:
-        return False, "Fout: commando heeft de tijdslimiet overschreden."
-    except FileNotFoundError:
-        return False, f"Fout: tool niet gevonden op dit systeem."
-    except Exception as e:
-        return False, f"Onverwachte fout: {str(e)}"
-
-
-# ===== API ROUTES =====
-
-@app.route("/api/status", methods=["GET"])
-def status():
-    """Controleer welke tools beschikbaar zijn."""
-    beschikbaar = {}
-    for key, config in ALLOWED_TOOLS.items():
-        beschikbaar[key] = tool_beschikbaar(config["bin"])
-    return jsonify({
-        "status": "actief",
-        "tools": beschikbaar
-    })
-
-
-@app.route("/api/run", methods=["POST"])
+@app.route('/api/run', methods=['POST'])
+@app.route('/run', methods=['POST'])
+@app.route('/api/scan', methods=['POST'])
+@app.route('/scan', methods=['POST'])
 def run_tool():
-    """
-    Voer een tool uit.
-    
-    Verwacht JSON body:
-    {
-        "tool": "nmap",
-        "args": "-sV 192.168.1.1"
-    }
-    """
-    data = request.get_json()
-    if not data:
-        return jsonify({"success": False, "output": "Geen JSON data ontvangen."}), 400
+    """Voer een geselecteerde security tool veilig uit."""
+    data = request.get_json() or {}
+    tool_name = data.get('tool')
+    target = data.get('target', '').strip()
+    user_flags = data.get('flags', [])
 
-    tool_key = data.get("tool", "").strip().lower()
-    args_raw  = data.get("args", "").strip()
+    if not tool_name or tool_name not in ALLOWED_TOOLS:
+        return jsonify({"error": f"Tool '{tool_name}' is niet toegestaan of niet gevonden."}), 400
 
-    # Valideer tool
-    geldig, fout = valideer_commando(tool_key, args_raw)
-    if not geldig:
-        return jsonify({"success": False, "output": fout}), 403
+    tool_config = ALLOWED_TOOLS[tool_name]
+    bin_path = tool_config["bin"]
+    allowed_flags = tool_config.get("allowed_flags", [])
 
-    tool_config = ALLOWED_TOOLS[tool_key]
-    bin_naam    = tool_config["bin"]
+    cmd = [bin_path]
 
-    # Controleer of tool geïnstalleerd is
-    if not tool_beschikbaar(bin_naam):
-        return jsonify({
-            "success": False,
-            "output": f"'{bin_naam}' is niet geïnstalleerd op dit systeem.\nInstalleer met: sudo apt install {bin_naam}"
-        }), 404
+    # Converteer string-flags naar een lijst indien nodig
+    if isinstance(user_flags, str):
+        user_flags = shlex.split(user_flags)
 
-    # Bouw commando op
+    # Valideer flags
+    for flag in user_flags:
+        flag_base = flag.split('=')[0]
+        if flag_base in allowed_flags or any(flag.startswith(af) for af in allowed_flags):
+            cmd.append(flag)
+
+    # Target validatie (voorkom command injection)
+    if target:
+        if re.match(r'^[a-zA-Z0-9.-_:/]+$', target):
+            cmd.append(target)
+        else:
+            return jsonify({"error": "Ongeldig target formaat."}), 400
+
     try:
-        args_lijst = shlex.split(args_raw) if args_raw else []
-    except ValueError as e:
-        return jsonify({"success": False, "output": f"Ongeldige argumenten: {e}"}), 400
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+        return jsonify({
+            "success": True,
+            "command": " ".join(cmd),
+            "stdout": result.stdout,
+            "stderr": result.stderr,
+            "returncode": result.returncode
+        })
+    except subprocess.TimeoutExpired:
+        return jsonify({"error": "Commando uitvoering is verlopen (timeout van 120s)."}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
-    commando = [bin_naam] + args_lijst
-
-    # Uitvoeren
-    succes, uitvoer = voer_uit(commando, timeout=120)
-
-    return jsonify({
-        "success": succes,
-        "tool":    tool_key,
-        "command": " ".join(commando),
-        "output":  uitvoer
-    })
-
-
-@app.route("/api/tools", methods=["GET"])
-def lijst_tools():
-    """Geef een lijst van alle geconfigureerde tools terug."""
-    return jsonify({
-        "tools": list(ALLOWED_TOOLS.keys())
-    })
-
-
-# ===== STARTEN =====
-if __name__ == "__main__":
-    print("=" * 45)
-    print("  ZeroThreat Backend – Actief")
-    print("  URL: http://127.0.0.1:5025")
-    print("=" * 45)
-    app.run(debug=True, host="127.0.0.1", port=5025)
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5025))
+    app.run(host='0.0.0.0', port=port, debug=True)
