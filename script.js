@@ -1,5 +1,5 @@
 // ===== CONFIGURATIE =====
-const API_URL = "http://127.0.0.1:5025/api";
+const API_URL = "https://dashboard.abelsoftware123.com/api";
 
 // Tool → backend tool key mapping
 const tools = {
